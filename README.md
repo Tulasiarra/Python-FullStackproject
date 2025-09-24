@@ -157,8 +157,6 @@ The App will be available at `http://localhost:8000`
 
 Ideas for extending this project:
 
-- **User Authentication**: Add secure sign-up and login.  
-- **Task Categories**: Organize tasks by subjects or custom categories.  
 - **Notifications**: Send email or push reminders for upcoming deadlines.  
 - **File Attachments**: Attach files or images to tasks.  
 - **Recurring Tasks**: Support daily, weekly, or monthly repeating tasks.  
