@@ -12,12 +12,12 @@ The system is modular, with separate components for business logic, database ope
 
 ## Features
 
-- **User Authentication**: Secure sign-up and login using Supabase Auth.
-- **Task Management**: Create, read, update, and delete tasks.
-- **Categorization & Priority**: Assign tasks to categories and set priority levels.
-- **Deadline Tracking**: Monitor deadlines and task completion status.
-- **Search & Filter**: Quickly find tasks based on category, priority, or status.
-- **Cloud Storage**: All data is stored securely in Supabase.
+- **User Authentication**: Sign up and login using Supabase Auth.  
+- **Task Management**: Create, read, update, and delete tasks.  
+- **Categorization & Priority**: Assign categories and set priority levels.  
+- **Deadline Tracking**: Monitor deadlines and completion status.  
+- **Search & Filter**: Quickly find tasks by category, priority, or status.  
+- **Cloud Storage**: Secure storage with Supabase.  
 
 ## Project Structure
 Productivity Management System/
@@ -157,13 +157,10 @@ The App will be available at `http://localhost:8000`
 
 Ideas for extending this project:
 
-- **User Authentication**: Add secure sign-up and login.  
-- **Task Categories**: Organize tasks by subjects or custom categories.  
-- **Notifications**: Send email or push reminders for upcoming deadlines.  
+- **Notifications**: Email or push reminders for upcoming deadlines.  
 - **File Attachments**: Attach files or images to tasks.  
-- **Recurring Tasks**: Support daily, weekly, or monthly repeating tasks.  
-- **Task Progress**: Track progress with percentages or status updates.  
-- **Analytics Dashboard**: Visualize completed and pending tasks.  
+- **Recurring Tasks**: Support for daily, weekly, or monthly tasks.  
+- **Analytics Dashboard**: View progress and completed tasks.  
 - **Collaboration**: Share tasks with other users for teamwork.  
 
 
