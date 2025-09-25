@@ -157,10 +157,7 @@ The App will be available at `http://localhost:8000`
 
 Ideas for extending this project:
 
-<<<<<<< HEAD
 
-=======
->>>>>>> d353b0b4602a112d91c0a785008a6ad70408c76a
 - **Notifications**: Send email or push reminders for upcoming deadlines.  
 - **File Attachments**: Attach files or images to tasks.  
 - **Recurring Tasks**: Support daily, weekly, or monthly repeating tasks.  
