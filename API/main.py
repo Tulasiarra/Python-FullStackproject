@@ -1,9 +1,7 @@
-# Frontend ---> API ---> logic ---> db ---> Response
-# API/main.py
-
+# main.py
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModeL
+from pydantic import BaseModel
 import sys, os
 
 # Import UserManager from src
@@ -13,19 +11,30 @@ from src.logic import UserManager
 # --------------------------- App Setup ---------------------------
 app = FastAPI(title="Productivity Management System", version="1.0")
 
-# --------------------------- Allow frontend (Streamlit/React) to call the API ---------------------------
+# Allow frontend (Streamlit/React) to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow all origins (frontend apps)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Creating a UserManager Instance (business logic)
-user_manager = UserManager()
+# --------------------------- Business Logic ---------------------------
+user_manager = UserManager()  # Creating a UserManager Instance
 
 # --------------------------- Data Models ---------------------------
+
+# -------- User Models --------
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+
+class UserUpdate(BaseModel):
+    name: str 
+    email: str 
+    password: str
 
 # -------- Task Models --------
 class TaskCreate(BaseModel):
@@ -36,27 +45,16 @@ class TaskCreate(BaseModel):
 class TaskUpdate(BaseModel):
     status: str  # "pending" or "completed"
 
-# -------- User Models --------
-class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str
-
-class UserUpdate(BaseModel):
-    name: str | None = None
-    email: str | None = None
-    password: str | None = None
-
 # -------- Category Models --------
 class CategoryCreate(BaseModel):
     name: str
-    color: str | None = None
-    icon: str | None = None
+    color: str 
+    icon: str 
 
 class CategoryUpdate(BaseModel):
-    name: str | None = None
-    color: str | None = None
-    icon: str | None = None
+    name: str
+    color: str 
+    icon: str 
 
 # --------------------------- Endpoints ---------------------------
 
@@ -64,7 +62,33 @@ class CategoryUpdate(BaseModel):
 def home():
     return {"message": "Productivity Management System API is running!"}
 
-# -------- Task Endpoints --------
+# --------------------------- User Endpoints ---------------------------
+@app.get("/users")
+def get_users():
+    return user_manager.get_users()
+
+@app.post("/users")
+def create_user(user: UserCreate):
+    result = user_manager.add_user(user.name, user.email, user.password)
+    if not result.get("Success"):
+        raise HTTPException(status_code=400, detail=result.get("message"))
+    return result
+
+@app.put("/users/{id}")
+def update_user(id: int, user: UserUpdate):
+    result = user_manager.update_user(id, user.name, user.email, user.password)
+    if not result.get("Success"):
+        raise HTTPException(status_code=400, detail=result.get("message"))
+    return result
+
+@app.delete("/users/{id}")
+def delete_user(id: int):
+    result = user_manager.delete_user(id)
+    if not result.get("Success"):
+        raise HTTPException(status_code=400, detail=result.get("message"))
+    return result
+
+# --------------------------- Task Endpoints ---------------------------
 @app.get("/tasks")
 def get_tasks():
     return user_manager.get_tasks()
@@ -94,33 +118,7 @@ def delete_task(id: int):
         raise HTTPException(status_code=400, detail=result.get("message"))
     return result
 
-# -------- User Endpoints --------
-@app.get("/users")
-def get_users():
-    return user_manager.get_users()
-
-@app.post("/users")
-def create_user(user: UserCreate):
-    result = user_manager.add_user(user.name, user.email, user.password)
-    if not result.get("Success"):
-        raise HTTPException(status_code=400, detail=result.get("message"))
-    return result
-
-@app.put("/users/{id}")
-def update_user(id: int, user: UserUpdate):
-    result = user_manager.update_user(id, user.name, user.email, user.password)
-    if not result.get("Success"):
-        raise HTTPException(status_code=400, detail=result.get("message"))
-    return result
-
-@app.delete("/users/{id}")
-def delete_user(id: int):
-    result = user_manager.delete_user(id)
-    if not result.get("Success"):
-        raise HTTPException(status_code=400, detail=result.get("message"))
-    return result
-
-# -------- Category Endpoints --------
+# --------------------------- Category Endpoints ---------------------------
 @app.get("/categories")
 def get_categories():
     return user_manager.get_categories()

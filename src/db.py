@@ -1,98 +1,92 @@
-# Frontend ---> API ---> logic ---> db ---> Response
-# API/main.py
+# db_manager.py
+import os
+from supabase import create_client
+from dotenv import load_dotenv
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import sys, os
+load_dotenv()
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
 
-# Import UserManager from src
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.logic import UserManager
-
-# --------------------------- App Setup ---------------------------
-app = FastAPI(title="Productivity Management System", version="1.0")
-
-# --------------------------- Allow frontend (Streamlit/React) to call the API ---------------------------
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # allow all origins (frontend apps)
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Creating a UserManager Instance (business logic)
-user_manager = UserManager()
-
-# --------------------------- Data Models ---------------------------
-class TaskCreate(BaseModel):
-    """
-    Schema for creating a task
-    """
-    title: str
-    description: str
-    status: str  # e.g., "pending", "completed"
-
-class TaskUpdate(BaseModel):
-    """
-    Schema to update a task
-    """
-    status: str  # e.g., "pending" or "completed"
-
-# --------------------------- Endpoints ---------------------------
-@app.get("/")
-def home():
-    """
-    Check if the API is running
-    """
-    return {"message": "Productivity Management System API is running!"}
-
-@app.get("/tasks")
-def get_tasks():
-    """
-    Get all tasks
-    """
-    return user_manager.get_tasks()
-
-@app.post("/tasks")
-def create_task(task: TaskCreate):
-    """
-    Add a new task
-    """
-    result = user_manager.add_task(task.title, task.description, task.status)
-    if not result.get("Success"):
-        raise HTTPException(status_code=400, detail=result.get("message"))
-    return result
-
-@app.put("/tasks/{id}")
-def update_task(id: int, task: TaskUpdate):
-    """
-    Update task status (completed or pending)
-    """
-    result = (
-        user_manager.mark_complete(id)
-        if task.status.lower() == "completed"
-        else user_manager.mark_pending(id)
-    )
-    if not result.get("Success"):
-        raise HTTPException(status_code=400, detail=result.get("message"))
-    return result
-
-@app.delete("/tasks/{id}")
-def delete_task(id: int):
-    """
-    Delete a task
-    """
-    result = user_manager.delete_task(id)
-    if not result.get("Success"):
-        raise HTTPException(status_code=400, detail=result.get("message"))
-    return result
+supabase = create_client(url, key)
 
 
 
-#-------Run------
+# ---------------------------
+# Users Table
+# ---------------------------
+def create_user(id, name, email, password, created_at):
+    return supabase.table("users").insert({
+        "id": id,
+        "name": name,
+        "email": email,
+        "password": password,
+        "created_at": created_at
+    }).execute()
 
-if _name=="main_":
-    import uvicorn
-    uvicorn.run("main:app",host="0.0.0.0",port=8000,reload=True)
+
+def get_all_users():
+    return supabase.table("users").select("*").execute()
+
+
+def update_user(id, updates: dict):
+    # updates should be a dictionary with only fields you want to change
+    return supabase.table("users").update(updates).eq("id", id).execute()
+
+
+def delete_user(id):
+    return supabase.table("users").delete().eq("id", id).execute()
+
+
+# ---------------------------
+# Tasks Table
+# ---------------------------
+def create_task(id, user_id, title, description, category, priority, status, deadline, created_at):
+    return supabase.table("tasks").insert({
+        "id": id,
+        "user_id": user_id,
+        "title": title,
+        "description": description,
+        "category": category,
+        "priority": priority,
+        "status": status,
+        "deadline": deadline,
+        "created_at": created_at
+    }).execute()
+
+
+def get_all_tasks():
+    return supabase.table("tasks").select("*").execute()
+
+
+def update_task(id, updates: dict):
+    return supabase.table("tasks").update(updates).eq("id", id).execute()
+
+
+def delete_task(id):
+    return supabase.table("tasks").delete().eq("id", id).execute()
+
+
+# ---------------------------
+# Categories Table
+# ---------------------------
+def create_category(id, user_id, name, color, icon, created_at):
+    return supabase.table("categories").insert({
+        "id": id,
+        "user_id": user_id,
+        "name": name,
+        "color": color,
+        "icon": icon,
+        "created_at": created_at
+    }).execute()
+
+
+def get_all_categories():
+    return supabase.table("categories").select("*").execute()
+
+
+def update_category(id, updates: dict):
+    return supabase.table("categories").update(updates).eq("id", id).execute()
+
+
+def delete_category(id):
+    return supabase.table("categories").delete().eq("id", id).execute()

@@ -42,7 +42,7 @@ operations
 
 ## Quick start
 
-## prerequisites
+## pre  requisites
 
 
   -Python 3.8 or higher
@@ -67,7 +67,7 @@ pip install -r requirements.txt
   -Go to the SQL Edition in your Supabase dashboard
   -Run this SQL command:
   ```sql
-  CREATE TABLE users (
+CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
