@@ -157,10 +157,12 @@ The App will be available at `http://localhost:8000`
 
 Ideas for extending this project:
 
-- **Notifications**: Email or push reminders for upcoming deadlines.  
+
+- **Notifications**: Send email or push reminders for upcoming deadlines.  
 - **File Attachments**: Attach files or images to tasks.  
-- **Recurring Tasks**: Support for daily, weekly, or monthly tasks.  
-- **Analytics Dashboard**: View progress and completed tasks.  
+- **Recurring Tasks**: Support daily, weekly, or monthly repeating tasks.  
+- **Task Progress**: Track progress with percentages or status updates.  
+- **Analytics Dashboard**: Visualize completed and pending tasks.  
 - **Collaboration**: Share tasks with other users for teamwork.  
 
 
